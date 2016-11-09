@@ -1,0 +1,4 @@
+obj/*
+!obj/.git.keep
+out/*
+!out/index.html

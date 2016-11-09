@@ -1,0 +1,40 @@
+OUT_FILE := main
+
+OUT_DIR := out
+INC_DIR := inc
+SRC_DIR := src
+OBJ_DIR := obj
+
+CXX := g++
+LINKER := g++
+INC_DIRS := -I$(INC_DIR)
+CXX_FLAGS = \
+	-std=c++11 \
+	-Wall \
+	-Wextra \
+	-Wshadow \
+	-pedantic \
+	-g
+LIBS := -lSDL2
+
+SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
+DEPFILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.d,$(SRC_FILES))
+
+$(OUT_DIR)/$(OUT_FILE): $(OBJ_FILES)
+	$(LINKER) $(CXX_FLAGS) $^ $(LIBS) -o $@
+
+clean:
+	rm -rf $(OBJ_DIR)/* $(OUT_DIR)/main
+
+depends:
+	rm -rf $(OBJ_DIR)/*.d
+	$(MAKE) $(DEPFILES)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CXX) $(CXX_FLAGS) $(INC_DIRS) -c $< -o $@
+
+$(OBJ_DIR)/%.d: $(SRC_DIR)/%.cpp
+	$(CXX) $(CXX_FLAGS) $(INC_DIRS) -MM $< | tr '\n\r\\' ' ' | sed -e 's%^%$@ %' -e 's% % $(OBJ_DIR)/%' > $@
+
+-include $(DEPFILES)
