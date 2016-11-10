@@ -4,6 +4,8 @@
 #include "TextureManager.h"
 #include "GRun.h"
 
+using namespace std;
+
 GCursor::GCursor():
 	m_nX(0),
 	m_nY(0),
@@ -13,7 +15,8 @@ GCursor::GCursor():
 
 	m_nLastAnim = SDL_GetTicks();
 
-	if (!TheTextureManager::Instance()->load("assets/gfx/cursor.bmp", "cursor", TheGRun::Instance()->getRenderer())) {
+	if (!TheTextureManager::Instance()->load("assets/gfx/cursor.png", "cursor", TheGRun::Instance()->getRenderer())) {
+
 		throw std::runtime_error("Unable to load cursor texture.");
 	}
 }
@@ -23,6 +26,8 @@ void GCursor::anim () {
 }
 
 void GCursor::draw() {
+	//cout << getX() << " " << getY() << " " << m_nAnimFrame << endl;
+
 	TheTextureManager::Instance()
-		->drawFrame("cursor", getX(), getY(), 32, 32, 1, m_nAnimFrame, TheGRun::Instance()->getRenderer(), 0, 255);
+		->drawFrame("cursor", getX(), getY(), 32, 32, 0, m_nAnimFrame, TheGRun::Instance()->getRenderer(), 0, SDL_ALPHA_OPAQUE);
 }

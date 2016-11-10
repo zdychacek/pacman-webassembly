@@ -12,6 +12,8 @@
 #include "TextureManager.h"
 #include "utils.h"
 
+using namespace std;
+
 GRun* GRun::s_pInstance = nullptr;
 
 GRun::GRun(int w, int h, int bpp, bool fullscreen):
@@ -72,7 +74,7 @@ void GRun::keyUp(Uint8 key) {
 void GRun::move(int ms) {
 	m_fFPS = 1000.0f / ms;
 
-	/*if (getFocus() != nullptr) m_pActual->move();
+	//if (getFocus() != nullptr) m_pActual->move();
 
 	if (isCursorShow()) {
 		int x, y;
@@ -81,19 +83,21 @@ void GRun::move(int ms) {
 		m_curCursor->setX(x);
 		m_curCursor->setY(y);
 		m_curCursor->anim();
-	}*/
+	}
 }
 
 void GRun::render() {
 	//if (getFocus() != nullptr) {
-
-
 		SDL_RenderClear(m_pRenderer);
 
 		SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 		SDL_RenderFillRect(m_pRenderer, nullptr);
 
-		drawText(getStdFont(), SDL_Color { 200, 0, 0, 0 }, "huhu", 3, 3);
+		if (isCursorShow()) {
+			m_curCursor->draw();
+		}
+
+		drawText(getStdFont(), SDL_Color { 200, 0, 0, 0 }, "hehe", 3, 3);
 
 		SDL_RenderPresent(m_pRenderer);
 
@@ -164,7 +168,7 @@ bool GRun::init(const char* title, int xPos, int yPos, int w, int h, bool fullsc
 	//SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
 	// vytvoreni kurzoru
-	//m_curCursor = new GCursor;
+	m_curCursor = new GCursor();
 	setCursor(true);
 
 	if (TTF_Init() == -1) {
