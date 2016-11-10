@@ -3,7 +3,7 @@ OUT_FILE := main
 OUT_DIR := out
 INC_DIR := inc
 SRC_DIR := src
-OBJ_DIR := obj
+OBJ_DIR := obj_native
 
 CXX := g++
 LINKER := g++
@@ -15,7 +15,7 @@ CXX_FLAGS = \
 	-Wshadow \
 	-pedantic \
 	-g
-LIBS := -lSDL2
+LIBS := -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
