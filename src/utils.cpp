@@ -1,7 +1,7 @@
 #include <iostream>
 #include "defines.h"
 #include "utils.h"
-#include "GGame.h"
+#include "Game.h"
 
 int getRnd(int max)
 {
@@ -11,11 +11,11 @@ int getRnd(int max)
 void drawText(TTF_Font *font, SDL_Color color, const std::string text, int x, int y)
 {
   SDL_Surface *text_surface = TTF_RenderText_Blended(font, text.c_str(), color);
-  SDL_Texture *texture = SDL_CreateTextureFromSurface(TheGGame::Instance()->getRenderer(), text_surface);
+  SDL_Texture *texture = SDL_CreateTextureFromSurface(TheGame::Instance()->getRenderer(), text_surface);
 
   SDL_Rect text_dest = {x, y, 0, 0};
   SDL_QueryTexture(texture, nullptr, nullptr, &text_dest.w, &text_dest.h);
-  SDL_RenderCopy(TheGGame::Instance()->getRenderer(), texture, nullptr, &text_dest);
+  SDL_RenderCopy(TheGame::Instance()->getRenderer(), texture, nullptr, &text_dest);
 
   SDL_FreeSurface(text_surface);
 }

@@ -1,7 +1,7 @@
 OUT_FILE := main.js
 
 OUT_DIR := out
-INC_DIR := inc
+INC_DIR := src
 SRC_DIR := src
 OBJ_DIR := obj_wasm
 
@@ -42,9 +42,11 @@ depends:
 	$(MAKE) $(DEPFILES)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXX_FLAGS) $(INC_DIRS) -c $< -o $@
 
 $(OBJ_DIR)/%.d: $(SRC_DIR)/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXX_FLAGS) $(INC_DIRS) -MM $< | tr '\n\r\\' ' ' | sed -e 's%^%$@ %' -e 's% % $(OBJ_DIR)/%' > $@
 
 -include $(DEPFILES)

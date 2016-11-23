@@ -1,3 +1,5 @@
+obj_native/
+obj_wasm/
 obj*/*
 !.git.keep
 out/*

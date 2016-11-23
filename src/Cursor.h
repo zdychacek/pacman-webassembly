@@ -1,12 +1,12 @@
-#ifndef GCURSOR_H
-#define GCURSOR_H
+#ifndef __Cursor__
+#define __Cursor__
 
 #include "utils.h"
 
-class GCursor
+class Cursor
 {
 public:
-  GCursor();
+  Cursor();
   inline void setX(int x) { m_nX = x; }
   inline int getX() const { return m_nX; }
   inline void setY(int y) { m_nY = y; }

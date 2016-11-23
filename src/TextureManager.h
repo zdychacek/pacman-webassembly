@@ -11,7 +11,7 @@ class TextureManager
 public:
   static TextureManager *Instance()
   {
-    if (s_pInstance == 0)
+    if (s_pInstance == nullptr)
     {
       s_pInstance = new TextureManager();
 

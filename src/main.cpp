@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 #include <time.h>
 #include <iostream>
-#include "GGame.h"
+#include "Game.h"
 
 using namespace std;
 
@@ -14,9 +14,9 @@ const int DELAY_TIME = 1000.0f / FPS;
 Uint32 frameStart, frameTime = 0;
 bool isDone = false;
 
-void main_loop(void *ctx)
+void main_loop(void *)
 {
-  if (!TheGGame::Instance()->isRunning())
+  if (!TheGame::Instance()->isRunning())
   {
 #ifdef __EMSCRIPTEN__
     emscripten_cancel_main_loop();
@@ -27,21 +27,23 @@ void main_loop(void *ctx)
     return;
   }
 
-  frameStart = SDL_GetTicks();
+	if (!TheGame::Instance()->isWindowActive())
+	{
+	  return;
+	}
 
-  if (TheGGame::Instance()->isWindowActive())
-  {
-    TheGGame::Instance()->processEvents();
-    TheGGame::Instance()->move(frameTime);
-    TheGGame::Instance()->render();
-  }
+	frameStart = SDL_GetTicks();
 
-  frameTime = SDL_GetTicks() - frameStart;
+	TheGame::Instance()->handleEvents();
+	TheGame::Instance()->update();
+	TheGame::Instance()->render();
 
-  if (frameTime < DELAY_TIME)
-  {
-    SDL_Delay((int)(DELAY_TIME - frameTime));
-  }
+	frameTime = SDL_GetTicks() - frameStart;
+
+	if (frameTime < DELAY_TIME)
+	{
+		SDL_Delay(static_cast<int>(DELAY_TIME - frameTime));
+	}
 }
 
 #ifdef __EMSCRIPTEN__
@@ -55,7 +57,7 @@ int main(int argc, char *argv[])
 
   cout << "App init attempt..." << endl;
 
-  if (TheGGame::Instance()->init("The game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, false))
+  if (TheGame::Instance()->init("The game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, false))
   {
     cout << "App init success!" << endl;
 
@@ -68,6 +70,15 @@ int main(int argc, char *argv[])
     }
 #endif
   }
+  else
+  {
+    cout << "App init failure: " << SDL_GetError() << endl;
+
+    return -1;
+  }
+
+  cout << "App closing..." << endl;
+  TheGame::Instance()->clean();
 
   return 0;
 }
