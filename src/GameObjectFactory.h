@@ -47,8 +47,8 @@ public:
 
     if (it == m_creators.end())
     {
-      std::cout << "could not find type: " << typeID << std::endl;
-      return NULL;
+      std::cout << "Could not find type: " << typeID << std::endl;
+      return nullptr;
     }
 
     BaseCreator *pCreator = (*it).second;

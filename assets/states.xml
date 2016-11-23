@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<States>
+	<MENU>
+		<TEXTURES>
+			<texture filename="assets/gfx/button.png" ID="playbutton"/>
+			<texture filename="assets/gfx/exit.png" ID="exitbutton"/>
+		</TEXTURES>
+
+		<OBJECTS>
+			<object type="MenuButton" x="200" y="100" width="400" height="100" textureID="playbutton" numFrames="0" callbackID="0"/>
+			<object type="MenuButton" x="200" y="250" width="400" height="100" textureID="exitbutton" numFrames="0" callbackID="1"/>
+		</OBJECTS>
+	</MENU>
+
+	<PLAY>
+		<TEXTURES>
+		</TEXTURES>
+
+		<OBJECTS>
+		</OBJECTS>
+	</PLAY>
+</States>

@@ -8,6 +8,8 @@
 #include "TextureManager.h"
 #include "SoundManager.h"
 #include "InputHandler.h"
+#include "GameObjectFactory.h"
+#include "MenuButton.h"
 #include "MainMenuState.h"
 #include "utils.h"
 
@@ -79,7 +81,7 @@ bool Game::init(string title, int xpos, int ypos, int width, int height, bool fu
     return false;
   }
 
-  cout << "Eenderer creation success" << endl;
+  cout << "Renderer creation success." << endl;
 
   SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, 255);
 
@@ -109,6 +111,9 @@ bool Game::init(string title, int xpos, int ypos, int width, int height, bool fu
   // add some sound effects - TODO move to better place
   TheSoundManager::Instance()->load("assets/sfx/appear.wav", "appear", SOUND_SFX); // SOUND_MUSIC
   TheSoundManager::Instance()->playSound("appear", 0);
+
+	// register the types for the game
+  TheGameObjectFactory::Instance()->registerType("MenuButton", new MenuButtonCreator());
 
   // start the menu state
   m_pGameStateMachine = new GameStateMachine();

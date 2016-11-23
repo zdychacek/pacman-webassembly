@@ -7,7 +7,9 @@
 #include "Game.h"
 #include "MenuButton.h"
 
-const std::string MainMenuState::s_menuID = "MENU";
+using namespace std;
+
+const string MainMenuState::s_menuID = "MENU";
 
 // Callbacks
 void MainMenuState::s_menuToPlay()
@@ -17,7 +19,11 @@ void MainMenuState::s_menuToPlay()
 
 void MainMenuState::s_exitFromMenu()
 {
+  //cout << this;
+
+#ifndef __EMSCRIPTEN__
   TheGame::Instance()->quit();
+#endif
 }
 
 // end callbacks
@@ -28,26 +34,22 @@ void MainMenuState::update()
   {
     s_menuToPlay();
   }
-  if (!m_gameObjects.empty())
-  {
-    for (int i = 0; i < m_gameObjects.size(); i++)
+
+  for_each(m_gameObjects.begin(), m_gameObjects.end(), [](auto gameObject) {
+    if (gameObject != nullptr)
     {
-      if (m_gameObjects[i] != 0)
-      {
-				m_gameObjects[i]->update();
-      }
+      gameObject->update();
     }
-  }
+  });
 }
 
 void MainMenuState::render()
 {
   if (m_loadingComplete && !m_gameObjects.empty())
   {
-    for (int i = 0; i < m_gameObjects.size(); i++)
-    {
-      m_gameObjects[i]->draw();
-    }
+    for_each(m_gameObjects.begin(), m_gameObjects.end(), [](auto gameObject) {
+      gameObject->draw();
+    });
   }
 }
 
@@ -55,9 +57,8 @@ bool MainMenuState::onEnter()
 {
   // parse the state
   StateParser stateParser;
-  stateParser.parseState("assets/attack.xml", s_menuID, &m_gameObjects, &m_textureIDList);
+  stateParser.parseState("assets/states.xml", s_menuID, &m_gameObjects, &m_textureIDList);
 
-  m_callbacks.push_back(0);
   m_callbacks.push_back(s_menuToPlay);
   m_callbacks.push_back(s_exitFromMenu);
 
@@ -66,6 +67,7 @@ bool MainMenuState::onEnter()
 
   m_loadingComplete = true;
   std::cout << "Entering MenuState" << std::endl;
+
   return true;
 }
 
@@ -83,31 +85,26 @@ bool MainMenuState::onExit()
   m_gameObjects.clear();
 
   // clear the texture manager
-	for(int i = 0; i < m_textureIDList.size(); i++)
-	{
-			TheTextureManager::Instance()->clearFromTextureMap(m_textureIDList[i]);
-	}
+  std::for_each(m_textureIDList.begin(), m_textureIDList.end(), [](auto texture) {
+    TheTextureManager::Instance()->clearFromTextureMap(texture);
+  });
 
   // reset the input handler
   TheInputHandler::Instance()->reset();
 
   std::cout << "Exiting MenuState" << std::endl;
+
   return true;
 }
 
 void MainMenuState::setCallbacks(const std::vector<Callback> &callbacks)
 {
-  // go through the game objects
-  if (!m_gameObjects.empty())
-  {
-    for (int i = 0; i < m_gameObjects.size(); i++)
+  std::for_each(m_gameObjects.begin(), m_gameObjects.end(), [callbacks](auto gameObject) {
+    // if they are of type MenuButton then assign a callback based on the id passed in from the file
+    if (dynamic_cast<MenuButton *>(gameObject))
     {
-      // if they are of type MenuButton then assign a callback based on the id passed in from the file
-      if (dynamic_cast<MenuButton *>(m_gameObjects[i]))
-      {
-	MenuButton *pButton = dynamic_cast<MenuButton *>(m_gameObjects[i]);
-	pButton->setCallback(callbacks[pButton->getCallbackID()]);
-      }
+      MenuButton *pButton = dynamic_cast<MenuButton *>(gameObject);
+      pButton->setCallback(callbacks[pButton->getCallbackID()]);
     }
-  }
+  });
 }

@@ -27,7 +27,6 @@ void MenuButton::draw()
 void MenuButton::update()
 {
 	m_position += m_velocity;
-  m_currentFrame = static_cast<int>((SDL_GetTicks() / (1000 / 3)) % m_numFrames);
 
   Vector2D *pMousePos = TheInputHandler::Instance()->getMousePosition();
 
